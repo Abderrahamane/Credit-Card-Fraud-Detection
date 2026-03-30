@@ -2,6 +2,8 @@
 
 A machine-learning project that predicts whether a credit-card transaction is fraudulent.
 
+## Demo: https://credit-card-fraud-detection-abderrahmanehouri.streamlit.app/
+
 ## Why this project
 
 Digital payments are fast and convenient, but fraud remains a major risk. Fraud detection models help teams flag suspicious transactions early so they can reduce financial losses and protect customer trust.
@@ -73,20 +75,6 @@ streamlit run app.py
 ```
 
 Then open the local URL shown in the terminal (usually `http://localhost:8501`).
-
-## Deploy on Streamlit Community Cloud
-
-1. Push this project to a GitHub repository.
-2. Go to Streamlit Community Cloud and sign in with GitHub.
-3. Click **New app** and select:
-   - Repository: your project repo
-   - Branch: `main` (or your deployment branch)
-   - Main file path: `app.py`
-4. Keep `requirements.txt` in the repo root so dependencies install automatically.
-5. Keep `runtime.txt` in the repo root to pin the cloud Python version.
-6. Click **Deploy**.
-
-If deployment fails, open the app logs in Streamlit Cloud and check dependency or model-path errors first.
 
 ## Batch CSV scoring
 
