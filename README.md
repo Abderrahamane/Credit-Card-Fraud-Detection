@@ -23,7 +23,7 @@ A reliable fraud detection pipeline can create value in several ways:
 
 - `notebook.ipynb` - training, evaluation, and model export
 - `model/model.pkl` - trained XGBoost model artifact
-- `app.py` - Streamlit inference app
+- `app.py` - Streamlit inference app (single transaction + batch CSV)
 - `smoke_test.py` - quick local model sanity check
 - `requirements.txt` - Python dependencies
 - `.streamlit/config.toml` - optional Streamlit UI theme config
@@ -52,6 +52,14 @@ streamlit run app.py
 ```
 
 Then open the local URL shown in the terminal (usually `http://localhost:8501`).
+
+## Batch CSV scoring
+
+In the app, switch to **Batch CSV** mode and upload a `.csv` file.
+
+- Required columns: `V1` to `V28` and `scaled_amount`
+- Extra columns are preserved in output
+- Output adds: `predicted_class`, `fraud_probability`, and `is_fraud_at_threshold`
 
 ## Deploy on Streamlit Community Cloud
 
