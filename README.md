@@ -26,20 +26,41 @@ A reliable fraud detection pipeline can create value in several ways:
 - `app.py` - Streamlit inference app (single transaction + batch CSV)
 - `smoke_test.py` - quick local model sanity check
 - `requirements.txt` - Python dependencies
+- `runtime.txt` - Streamlit Cloud Python runtime pin (`python-3.12`)
 - `.streamlit/config.toml` - optional Streamlit UI theme config
 
-## Local setup
+## Python version compatibility
 
-```bash
-python -m venv .venv
+This project is tested with **Python 3.12 and 3.14**.
+
+`requirements.txt` is pinned to versions that provide prebuilt Windows wheels for both versions, so `pip` does not need to compile `scikit-learn` from source.
+
+## Local setup (Windows cmd)
+
+```cmd
+py -3.14 -m venv .venv
 .venv\Scripts\activate
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+If you prefer Python 3.12, replace `-3.14` with `-3.12`.
+
+## Quick fix for scikit-learn install error
+
+If installation fails after changing dependency versions, recreate the virtual environment:
+
+```cmd
+rmdir /s /q .venv
+py -3.14 -m venv .venv
+.venv\Scripts\activate
+python -m pip install --upgrade pip
+pip install --only-binary=:all: -r requirements.txt
+```
+
 ## Verify model loading
 
-```bash
+```cmd
 python smoke_test.py
 ```
 
@@ -47,11 +68,25 @@ Expected output includes model type, predicted class, and fraud probability.
 
 ## Run the Streamlit app
 
-```bash
+```cmd
 streamlit run app.py
 ```
 
 Then open the local URL shown in the terminal (usually `http://localhost:8501`).
+
+## Deploy on Streamlit Community Cloud
+
+1. Push this project to a GitHub repository.
+2. Go to Streamlit Community Cloud and sign in with GitHub.
+3. Click **New app** and select:
+   - Repository: your project repo
+   - Branch: `main` (or your deployment branch)
+   - Main file path: `app.py`
+4. Keep `requirements.txt` in the repo root so dependencies install automatically.
+5. Keep `runtime.txt` in the repo root to pin the cloud Python version.
+6. Click **Deploy**.
+
+If deployment fails, open the app logs in Streamlit Cloud and check dependency or model-path errors first.
 
 ## Batch CSV scoring
 
