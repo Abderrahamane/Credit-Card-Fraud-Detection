@@ -61,14 +61,6 @@ In the app, switch to **Batch CSV** mode and upload a `.csv` file.
 - Extra columns are preserved in output
 - Output adds: `predicted_class`, `fraud_probability`, and `is_fraud_at_threshold`
 
-## Deploy on Streamlit Community Cloud
-
-1. Push this repository to GitHub.
-2. Go to Streamlit Community Cloud and click **New app**.
-3. Select your repository, branch, and set **Main file path** to `app.py`.
-4. Ensure `requirements.txt` is detected.
-5. Click **Deploy**.
-
 ## Notes and limitations
 
 - The model expects PCA-based inputs (`V1` to `V28`) and `scaled_amount`.
