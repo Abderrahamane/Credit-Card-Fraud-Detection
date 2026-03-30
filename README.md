@@ -1,85 +1,69 @@
-# Credit Card Fraud Detection - Streamlit Deployment
+# Credit Card Fraud Detection
 
-This project deploys your trained fraud model (`model/fraud_model.pkl`) as a Streamlit app.
+A machine-learning project that predicts whether a credit-card transaction is fraudulent.
 
-The app keeps notebook preprocessing at inference time:
-- drops `Time` if present
-- computes `LogAmount = log1p(Amount)`
-- creates `scaled_amount`
-- sends model features in exact training order (`V1`..`V28`, `scaled_amount`)
+## Why this project
 
-## 1) Project setup
+Digital payments are fast and convenient, but fraud remains a major risk. Fraud detection models help teams flag suspicious transactions early so they can reduce financial losses and protect customer trust.
+
+This project demonstrates an end-to-end workflow:
+- train a fraud classifier in `notebook.ipynb`
+- persist the trained model as `model/model.pkl`
+- deploy an interactive web app using Streamlit (`app.py`)
+
+## Business impact
+
+A reliable fraud detection pipeline can create value in several ways:
+- lower direct fraud losses by catching risky transactions earlier
+- reduce manual review volume by prioritizing high-risk cases
+- improve customer experience by minimizing false positives and payment friction
+- support risk and compliance teams with consistent scoring logic
+
+## Project structure
+
+- `notebook.ipynb` - training, evaluation, and model export
+- `model/model.pkl` - trained XGBoost model artifact
+- `app.py` - Streamlit inference app
+- `smoke_test.py` - quick local model sanity check
+- `requirements.txt` - Python dependencies
+- `.streamlit/config.toml` - optional Streamlit UI theme config
+
+## Local setup
 
 ```bash
-cd C:\Users\MICROSOFT\PycharmProjects\Credit-Card-Fraud-Detection
 python -m venv .venv
 .venv\Scripts\activate
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-## 2) (Recommended) Save Amount scaling parameters
-
-Your notebook used `StandardScaler` for `LogAmount`. For best prediction quality, generate and save those stats once from `creditcard.csv`.
-
-```bash
-python scripts\create_scaler_params.py --dataset C:\path\to\creditcard.csv --output model\scaler_params.json
-```
-
-This creates `model/scaler_params.json`:
-
-```json
-{
-  "log_amount_mean": 0.0,
-  "log_amount_std": 1.0
-}
-```
-
-If this file is missing, the app still runs with a fallback (`scaled_amount = log1p(Amount)`), but accuracy may be lower.
-
-## 3) Run locally
-
-```bash
-streamlit run app.py
-```
-
-Then open the local URL shown in terminal (usually `http://localhost:8501`).
-
-## 4) Use the app
-
-### Single prediction
-1. Enter `Amount`.
-2. Enter feature values `V1` to `V28`.
-3. (Optional) enter `Time`; it will be dropped automatically.
-4. Click **Predict Fraud Risk**.
-
-### Batch prediction
-1. Switch to **Batch CSV prediction**.
-2. Upload CSV containing at least `V1`..`V28` and `Amount`.
-3. Optional columns (`Time`, `Class`) are handled automatically.
-4. Download prediction results as CSV.
-
-## 5) Deploy to Streamlit Community Cloud
-
-1. Push this project to GitHub.
-2. Go to https://share.streamlit.io and sign in.
-3. Click **New app**.
-4. Select your repo and branch.
-5. Set **Main file path** to `app.py`.
-6. Click **Deploy**.
-
-## 6) Files added for deployment
-
-- `app.py`: Streamlit UI + inference flow
-- `preprocessing.py`: notebook-aligned preprocessing for inference
-- `scripts/create_scaler_params.py`: helper to export scaling params from dataset
-- `smoke_test.py`: quick local inference sanity test
-- `requirements.txt`: runtime dependencies
-
-## 7) Quick sanity test
+## Verify model loading
 
 ```bash
 python smoke_test.py
 ```
 
-You should see `Smoke test passed` in terminal.
+Expected output includes model type, predicted class, and fraud probability.
+
+## Run the Streamlit app
+
+```bash
+streamlit run app.py
+```
+
+Then open the local URL shown in the terminal (usually `http://localhost:8501`).
+
+## Deploy on Streamlit Community Cloud
+
+1. Push this repository to GitHub.
+2. Go to Streamlit Community Cloud and click **New app**.
+3. Select your repository, branch, and set **Main file path** to `app.py`.
+4. Ensure `requirements.txt` is detected.
+5. Click **Deploy**.
+
+## Notes and limitations
+
+- The model expects PCA-based inputs (`V1` to `V28`) and `scaled_amount`.
+- Real production deployment should include monitoring, drift checks, and periodic retraining.
+- Use threshold tuning based on your business cost trade-off between false positives and false negatives.
 
